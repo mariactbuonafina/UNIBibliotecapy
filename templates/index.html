@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <title>Biblioteca - Lista de Livros</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 900px; margin: 2rem auto; }
+      table { width: 100%; border-collapse: collapse; }
+      th, td { padding: 0.5rem; border: 1px solid #ddd; text-align: left; }
+      form { margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+      .full { grid-column: 1 / -1; }
+      .msg { padding: 0.5rem; border-radius: 4px; margin-bottom: 1rem; }
+    </style>
+  </head>
+  <body>
+    <h1>Biblioteca - Livros</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, msg in messages %}
+          <div class="msg">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <table>
+      <thead>
+        <tr><th>ID</th><th>Título</th><th>Autor</th><th>Ano</th><th>Disponível</th><th>Ações</th></tr>
+      </thead>
+      <tbody>
+        {% for l in livros %}
+          <tr>
+            <td>{{ l.id }}</td>
+            <td>{{ l.titulo }}</td>
+            <td>{{ l.autor }}</td>
+            <td>{{ l.ano_publicacao }}</td>
+            <td>{{ 'Sim' if l.disponivel else 'Não' }}</td>
+            <td>
+              <form action="{{ url_for('delete', book_id=l.id) }}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Remover livro?')">Remover</button>
+              </form>
+              <a href="{{ url_for('edit', book_id=l.id) }}">Editar</a>
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="6">Nenhum livro cadastrado.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h2>Adicionar novo livro</h2>
+    <form method="post" class="full">
+      <input name="titulo" placeholder="Título" required>
+      <input name="autor" placeholder="Autor" required>
+      <input name="ano_publicacao" placeholder="Ano de publicação" required>
+      <label><input type="checkbox" name="disponivel" checked> Disponível</label>
+      <div class="full"><button type="submit">Adicionar</button></div>
+    </form>
+  </body>
+</html>
