@@ -1,0 +1,8 @@
+venv
+
+__pychache__/
+*.pyc
+*.pyo
+*.pyd   
+
+biblioteca.db
